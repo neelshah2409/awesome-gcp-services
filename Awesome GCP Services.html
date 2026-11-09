@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Awesome GCP Services — a curated, searchable directory</title>
+<meta name="description" content="A searchable, filterable directory of Google Cloud services, grouped by segment, with the gcloud command or API for each.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F4F6FB; --surface:#FFFFFF; --ink:#141C2B; --muted:#586379; --rule:#DCE2EC;
+  --accent:#2457C5; --code-bg:#EEF2F8; --hl:#FFE98A;
+  --c1:#2F66D0; --c2:#1E8A57; --c3:#C1830C; --c4:#CF4438; --c5:#7457C2; --c6:#14837F;
+  --dot:rgba(36,87,197,.13); --glow:.55; --card-shadow:0 1px 0 rgba(20,28,43,.04),0 8px 24px -14px rgba(20,28,43,.25);
+  --sans:"Schibsted Grotesk",-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:light; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B111C; --surface:#121A28; --ink:#E6EBF3; --muted:#98A4B7; --rule:#243045;
+    --accent:#86ABFF; --code-bg:#19233A; --hl:#5A4A0E;
+    --c1:#7FA6FF; --c2:#5CC994; --c3:#EBB54C; --c4:#F2806F; --c5:#B39BF5; --c6:#4FC9C2;
+    --dot:rgba(134,171,255,.10); --glow:.35; --card-shadow:0 1px 0 rgba(0,0,0,.3),0 10px 30px -16px rgba(0,0,0,.8);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B111C; --surface:#121A28; --ink:#E6EBF3; --muted:#98A4B7; --rule:#243045;
+  --accent:#86ABFF; --code-bg:#19233A; --hl:#5A4A0E;
+  --c1:#7FA6FF; --c2:#5CC994; --c3:#EBB54C; --c4:#F2806F; --c5:#B39BF5; --c6:#4FC9C2;
+  --dot:rgba(134,171,255,.10); --glow:.35; --card-shadow:0 1px 0 rgba(0,0,0,.3),0 10px 30px -16px rgba(0,0,0,.8);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:calc(env(safe-area-inset-top,0px) + 76px);scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(var(--dot) 1.2px,transparent 1.3px);background-size:22px 22px;background-attachment:fixed}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* header */
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:color-mix(in srgb,var(--surface) 82%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--rule)}
+.top-in{max-width:1280px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px}
+.brand{font-family:var(--mono);font-size:14px;font-weight:500;text-decoration:none;display:flex;align-items:center;gap:10px}
+.dots{display:inline-grid;grid-template-columns:repeat(2,7px);gap:2px}
+.dots i{width:7px;height:7px;border-radius:2px;display:block}
+.top-spacer{flex:1}
+.top a.ext{font-size:14px;color:var(--muted);text-decoration:none}
+.top a.ext:hover{color:var(--ink);text-decoration:underline}
+.cat-btn{display:none;font:inherit;font-size:14px;font-weight:600;background:var(--code-bg);color:var(--ink);border:1px solid var(--rule);border-radius:8px;padding:6px 12px;cursor:pointer}
+
+/* hero */
+.hero-band{position:relative;overflow:hidden;isolation:isolate}
+.aurora{position:absolute;inset:-20% -10% 0;z-index:-1;pointer-events:none;opacity:var(--glow)}
+.aurora i{position:absolute;border-radius:50%;filter:blur(70px)}
+.aurora i:nth-child(1){width:42vw;height:42vw;left:-6vw;top:-8vw;background:var(--c1)}
+.aurora i:nth-child(2){width:30vw;height:30vw;left:38vw;top:-12vw;background:var(--c4);opacity:.7}
+.aurora i:nth-child(3){width:34vw;height:34vw;right:-8vw;top:4vw;background:var(--c3);opacity:.6}
+.aurora i:nth-child(4){width:28vw;height:28vw;left:22vw;top:18vw;background:var(--c2);opacity:.55}
+@media (prefers-reduced-motion:no-preference){
+  .aurora i{animation:drift 24s ease-in-out infinite alternate}
+  .aurora i:nth-child(2){animation-duration:30s}
+  .aurora i:nth-child(3){animation-duration:27s;animation-direction:alternate-reverse}
+  @keyframes drift{to{transform:translate(4vw,3vw) scale(1.08)}}
+}
+.hero-band::after{content:"";position:absolute;inset:auto 0 0;height:120px;background:linear-gradient(transparent,var(--bg));z-index:-1}
+.hero{max-width:1280px;margin:0 auto;padding:64px 24px 48px;display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);gap:40px;align-items:center}
+.kicker{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:500;background:color-mix(in srgb,var(--surface) 75%,transparent);border:1px solid var(--rule);border-radius:999px;padding:5px 12px 5px 6px;margin-bottom:22px;backdrop-filter:blur(6px)}
+.kicker b{background:var(--ink);color:var(--bg);border-radius:999px;padding:1px 9px;font-size:12px;font-weight:600}
+h1{font-size:clamp(46px,7.4vw,96px);line-height:.92;letter-spacing:-.045em;font-weight:800;margin:0 0 22px;
+  background:linear-gradient(100deg,var(--ink) 0%,var(--ink) 38%,var(--c1) 58%,var(--c5) 72%,var(--c4) 86%,var(--c3) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;padding-bottom:.06em}
+.lede{font-size:18px;color:var(--muted);max-width:52ch;margin:0 0 30px}
+.term{background:var(--surface);border:1px solid var(--rule);border-radius:14px;overflow:hidden;box-shadow:var(--card-shadow)}
+.term-bar{display:flex;gap:6px;padding:10px 14px;border-bottom:1px solid var(--rule);background:var(--code-bg)}
+.term-bar i{width:10px;height:10px;border-radius:50%;opacity:.85}
+.term-line{display:flex;align-items:center;padding:16px 18px;font-family:var(--mono);font-size:15px;flex-wrap:wrap;row-gap:6px}
+.term-line .p{color:var(--c2);margin-right:10px;user-select:none}
+.term-line .cmd{color:var(--muted);white-space:nowrap}
+.term-line label{display:flex;align-items:center;flex:1 1 200px;min-width:0}
+.term-line .q{color:var(--muted)}
+.term-line input{flex:1;min-width:0;font:inherit;color:var(--ink);background:transparent;border:0;outline:none;padding:2px}
+.term-line input::placeholder{color:var(--muted);opacity:.6}
+.term-line label:focus-within{box-shadow:inset 0 -2px 0 var(--accent)}
+.term-out{border-top:1px dashed var(--rule);padding:10px 18px;font-family:var(--mono);font-size:13px;color:var(--muted);display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.filters{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap}
+.chip{font:inherit;font-size:14px;font-weight:500;border:1px solid var(--rule);background:var(--surface);color:var(--ink);padding:7px 15px;border-radius:999px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--chip,var(--muted))}
+.chip[data-f="sv"]{--chip:var(--c5)} .chip[data-f="f"]{--chip:var(--c2)} .chip[data-f="all"]{--chip:conic-gradient(var(--c1) 0 25%,var(--c4) 0 50%,var(--c3) 0 75%,var(--c2) 0)}
+.chip[data-f="all"]::before{background:var(--chip)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* constellation */
+.sky{position:relative;aspect-ratio:1.15/1;width:100%}
+.sky canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.sky-cap{position:absolute;left:0;right:0;bottom:-6px;text-align:center;font-size:13px;color:var(--muted)}
+.tip{position:absolute;pointer-events:none;background:var(--surface);border:1px solid var(--rule);border-radius:10px;padding:7px 11px;font-size:13px;line-height:1.35;box-shadow:var(--card-shadow);transform:translate(-50%,calc(-100% - 14px));white-space:nowrap;opacity:0;transition:opacity .12s}
+.tip.on{opacity:1}
+.tip small{display:block;color:var(--muted)}
+
+/* layout */
+.wrap{max-width:1280px;margin:0 auto;padding:24px 24px 80px;display:grid;grid-template-columns:236px minmax(0,1fr);gap:44px}
+.rail{position:sticky;top:calc(env(safe-area-inset-top,0px) + 80px);align-self:start;max-height:calc(100vh - 110px);overflow:auto;background:color-mix(in srgb,var(--surface) 80%,transparent);border:1px solid var(--rule);border-radius:14px;padding:12px;backdrop-filter:blur(8px)}
+.rail h2{font-size:13px;font-weight:600;color:var(--muted);margin:2px 8px 8px}
+.rail ol{list-style:none;margin:0;padding:0}
+.rail a{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:8px;text-decoration:none;font-size:14.5px}
+.rail a:hover{background:var(--code-bg)}
+.rail a.on{background:var(--code-bg);font-weight:600;box-shadow:inset 3px 0 0 var(--sc,var(--accent))}
+.rail a.dim{opacity:.4}
+.rail .ic{width:18px;height:18px;color:var(--sc);flex:none}
+.rail .n{margin-left:auto;font-family:var(--mono);font-size:12px;color:var(--muted)}
+
+/* segments */
+section.seg{margin-bottom:64px}
+section.seg[hidden]{display:none}
+.seg-h{position:relative;display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 18px;align-items:center;padding:22px 24px;border-radius:18px;overflow:hidden;isolation:isolate;
+  background:linear-gradient(120deg,color-mix(in srgb,var(--sc) 16%,var(--surface)) 0%,var(--surface) 70%);border:1px solid color-mix(in srgb,var(--sc) 28%,var(--rule))}
+.seg-h::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;z-index:-1;
+  background:repeating-radial-gradient(circle,color-mix(in srgb,var(--sc) 30%,transparent) 0 1px,transparent 1px 12px)}
+.seg-ic{grid-row:1 / span 3;width:64px;height:64px;border-radius:16px;display:grid;place-items:center;color:var(--surface);background:var(--sc);box-shadow:0 10px 24px -10px var(--sc)}
+.seg-ic svg{width:34px;height:34px}
+.seg-h h2{margin:0;font-size:30px;letter-spacing:-.025em;font-weight:750;line-height:1.1}
+.seg-d{color:var(--muted);margin:0;max-width:66ch}
+.pix{display:flex;flex-wrap:wrap;gap:3px;margin-top:6px;align-items:center}
+.pix i{width:9px;height:9px;border-radius:2px;background:var(--sc)}
+.pix i.off{background:color-mix(in srgb,var(--sc) 22%,transparent)}
+.pix span{font-family:var(--mono);font-size:12px;color:var(--muted);margin-left:8px}
+
+ul.svc{list-style:none;margin:18px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px}
+li.s{position:relative;display:flex;flex-direction:column;gap:10px;padding:18px;background:var(--surface);border:1px solid var(--rule);border-radius:14px;box-shadow:var(--card-shadow);transition:border-color .15s,transform .15s}
+li.s:hover{border-color:color-mix(in srgb,var(--sc) 55%,var(--rule));transform:translateY(-2px)}
+@media (prefers-reduced-motion:reduce){li.s:hover{transform:none}}
+li.s[hidden]{display:none}
+.s-top{display:flex;gap:12px;align-items:flex-start}
+.mono{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font-weight:700;font-size:14px;letter-spacing:-.02em;color:var(--sc);
+  background:color-mix(in srgb,var(--sc) 13%,var(--surface));border:1px solid color-mix(in srgb,var(--sc) 30%,transparent)}
+.s-name{font-size:17px;font-weight:650;text-decoration:none;letter-spacing:-.01em;line-height:1.25}
+.s-name::after{content:"";position:absolute;inset:0;border-radius:14px}
+.s-name:hover{text-decoration:underline;text-underline-offset:3px}
+.tags{display:flex;gap:6px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:999px}
+.tag.f{color:var(--c2);background:color-mix(in srgb,var(--c2) 13%,transparent)}
+.tag.sv{color:var(--c5);background:color-mix(in srgb,var(--c5) 13%,transparent)}
+.s-desc{color:var(--muted);margin:0;font-size:15px;flex:1}
+.cli{position:relative;z-index:1;font-family:var(--mono);font-size:12.5px;background:var(--code-bg);border-radius:8px;padding:5px 6px 5px 10px;display:flex;align-items:center;gap:8px;min-width:0}
+.cli code{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.cli code::before{content:"$ ";color:var(--muted)}
+.cli.api code::before{content:"api ";color:var(--muted)}
+.cli.plain{background:transparent;border:1px dashed var(--rule);font-family:var(--sans);font-size:13px;color:var(--muted);padding:5px 10px}
+.cli.plain code{font-family:inherit}
+.cli.plain code::before{content:"Access via ";}
+.cp{font:inherit;font-family:var(--sans);font-size:12px;font-weight:600;border:0;background:transparent;color:var(--accent);cursor:pointer;padding:2px 6px;border-radius:5px}
+.cp:hover{background:var(--surface)}
+mark{background:var(--hl);color:inherit;border-radius:3px;padding:0 1px}
+.empty{padding:48px 0;font-size:18px;color:var(--muted)}
+.empty button{font:inherit;color:var(--accent);background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+
+footer{position:relative;margin-top:40px}
+footer svg{display:block;width:100%;height:90px}
+.foot-in{background:var(--surface);border-top:0}
+.foot-in p{max-width:1280px;margin:0 auto;padding:8px 24px 36px;color:var(--muted);font-size:14px}
+.totop{position:fixed;right:20px;bottom:calc(20px + env(safe-area-inset-bottom,0px));width:46px;height:46px;border-radius:50%;border:1px solid var(--rule);background:var(--surface);color:var(--ink);font-size:18px;cursor:pointer;display:none;box-shadow:var(--card-shadow)}
+.totop.show{display:block}
+
+.sheet{position:fixed;inset:0;z-index:20;background:rgba(8,12,20,.5);display:none}
+.sheet.open{display:block}
+.sheet-p{position:absolute;left:0;right:0;bottom:0;max-height:80%;overflow:auto;background:var(--surface);border-radius:18px 18px 0 0;padding:16px 16px calc(24px + env(safe-area-inset-bottom,0px))}
+.sheet-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.sheet-h strong{font-size:18px}
+.sheet-h button{font:inherit;font-size:22px;background:none;border:0;color:var(--ink);cursor:pointer;width:40px;height:40px}
+
+@media (max-width:960px){
+  .hero{grid-template-columns:1fr;padding-top:40px}
+  .sky{max-width:520px;margin:0 auto;width:100%}
+  .wrap{grid-template-columns:1fr;gap:0}
+  .wrap > .rail{display:none}
+  .cat-btn{display:inline-block}
+  .top a.ext{display:none}
+  .kbd-hint{display:none}
+  .seg-h{padding:18px}
+  .seg-ic{width:52px;height:52px;border-radius:14px}
+  .seg-ic svg{width:28px;height:28px}
+  .seg-h h2{font-size:24px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="top-in">
+    <a class="brand" href="#">
+      <span class="dots" aria-hidden="true"><i style="background:var(--c1)"></i><i style="background:var(--c4)"></i><i style="background:var(--c3)"></i><i style="background:var(--c2)"></i></span>
+      awesome-gcp-services
+    </a>
+    <span class="top-spacer"></span>
+    <a class="ext" href="https://cloud.google.com/products" target="_blank" rel="noopener">All Google Cloud products</a>
+    <a class="ext" href="https://cloud.google.com/free" target="_blank" rel="noopener">Free tier details</a>
+    <button class="cat-btn" id="catBtn" aria-haspopup="dialog">Categories</button>
+  </div>
+</header>
+
+<div class="hero-band">
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="hero">
+ <div>
+  <span class="kicker"><b id="kCount">140+</b> services in 15 segments, all in one place</span>
+  <h1>Awesome GCP Services</h1>
+  <p class="lede">A curated, searchable map of Google Cloud, grouped by what each service is for. Every entry links to its docs and shows the gcloud command group or API you’ll actually type.</p>
+  <div class="term">
+    <div class="term-bar" aria-hidden="true"><i style="background:var(--c4)"></i><i style="background:var(--c3)"></i><i style="background:var(--c2)"></i></div>
+    <div class="term-line">
+      <span class="p" aria-hidden="true">$</span>
+      <span class="cmd">gcloud services list --filter=</span>
+      <label><span class="q" aria-hidden="true">"</span>
+        <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="kubernetes, vector, kafka…" aria-label="Search services">
+        <span class="q" aria-hidden="true">"</span></label>
+    </div>
+    <div class="term-out" aria-live="polite"><span id="status">Loading index…</span><span class="kbd-hint">Press / to search</span></div>
+  </div>
+  <div class="filters" role="group" aria-label="Filter services">
+    <button class="chip" data-f="all" aria-pressed="true">All</button>
+    <button class="chip" data-f="sv" aria-pressed="false">Serverless</button>
+    <button class="chip" data-f="f" aria-pressed="false">Has free tier</button>
+  </div>
+ </div>
+ <div class="sky" id="sky">
+  <canvas id="cv" aria-label="Constellation of every service in the directory, clustered by segment. Select a dot to jump to its segment." role="img"></canvas>
+  <div class="tip" id="tip"></div>
+  <div class="sky-cap">Every dot is a service. Hover to identify, click to jump.</div>
+ </div>
+</div>
+</div>
+
+<div class="wrap">
+  <nav class="rail" aria-label="Categories"><h2>Segments</h2><ol id="rail"></ol></nav>
+  <main id="main"></main>
+</div>
+
+<footer>
+  <svg viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 90V60c60-30 120-30 180 0 40-40 110-46 160-6 50-50 140-50 190 4 30-30 90-36 130-4 60-56 170-56 220 6 40-28 100-30 140 0 50-44 140-44 180 4 40-26 100-26 140 4 30-20 70-20 100-4V90z" fill="var(--surface)"/>
+    <path d="M0 60c60-30 120-30 180 0" fill="none" stroke="var(--c1)" stroke-width="3"/>
+    <path d="M180 60c40-40 110-46 160-6 50-50 140-50 190 4" fill="none" stroke="var(--c4)" stroke-width="3"/>
+    <path d="M530 58c30-30 90-36 130-4 60-56 170-56 220 6" fill="none" stroke="var(--c3)" stroke-width="3"/>
+    <path d="M880 60c40-28 100-30 140 0 50-44 140-44 180 4" fill="none" stroke="var(--c2)" stroke-width="3"/>
+    <path d="M1200 64c40-26 100-26 140 4 30-20 70-20 100-4" fill="none" stroke="var(--c5)" stroke-width="3"/>
+  </svg>
+  <div class="foot-in"><p>Community-curated list, not affiliated with Google. Product names reflect 2026; free-tier allowances change, so confirm limits on the <a href="https://cloud.google.com/free" target="_blank" rel="noopener">Google Cloud free tier page</a> before relying on them.</p></div>
+</footer>
+
+<button class="totop" id="totop" aria-label="Back to top">↑</button>
+
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Categories">
+  <div class="sheet-p">
+    <div class="sheet-h"><strong>Segments</strong><button id="sheetX" aria-label="Close">×</button></div>
+    <nav class="rail" style="display:block;position:static;max-height:none"><ol id="rail2"></ol></nav>
+  </div>
+</div>
+
+<script>
+/* [name, url (path under cloud.google.com/ or full URL), description, gcloud group or API, flags: s=serverless f=free tier] */
+const DATA = [
+ {id:"compute", name:"Compute", c:"c1", d:"Virtual machines, accelerators and specialised hosts for workloads you want to control down to the OS.", items:[
+  ["Compute Engine","compute","Configurable VMs across general-purpose, compute-optimised, memory-optimised and accelerator machine families.","gcloud compute instances","f"],
+  ["Cloud GPUs","gpu","NVIDIA GPUs attached to VMs or GKE nodes for ML training, inference, rendering and HPC.","gcloud compute accelerator-types",""],
+  ["Cloud TPU","tpu","Google-designed tensor processors for large-scale model training and inference.","gcloud compute tpus",""],
+  ["Spot VMs","compute/docs/instances/spot","Deeply discounted, preemptible capacity for fault-tolerant and batch workloads.","gcloud compute instances create --provisioning-model=SPOT",""],
+  ["Confidential Computing","confidential-computing","VMs and GKE nodes that keep data encrypted in memory while it is being processed.","gcloud compute instances create --confidential-compute-type",""],
+  ["Sole-tenant nodes","compute/docs/nodes/sole-tenant-nodes","Physical servers dedicated to your project for licensing or compliance isolation.","gcloud compute sole-tenancy",""],
+  ["Batch","batch","Fully managed job scheduler that provisions VMs, runs batch jobs and tears them down.","gcloud batch jobs",""],
+  ["Google Cloud VMware Engine","vmware-engine","Run native VMware workloads on dedicated Google Cloud infrastructure.","gcloud vmware",""],
+  ["Bare Metal Solution","bare-metal","Dedicated bare-metal servers for specialised workloads such as Oracle databases.","gcloud bms",""]
+ ]},
+ {id:"serverless", name:"Serverless", c:"c5", d:"Run code and containers without managing servers; scale to zero and pay per use.", items:[
+  ["Cloud Run","run","Run any container as a request-driven service, job or worker pool, scaling to zero automatically.","gcloud run","sf"],
+  ["Cloud Run functions","functions","Event-driven functions in Node.js, Python, Go, Java and more, built on Cloud Run.","gcloud functions","sf"],
+  ["App Engine","appengine","Platform-as-a-service for web apps in standard and flexible environments.","gcloud app","sf"],
+  ["Firebase","https://firebase.google.com","App development platform with hosting, auth, realtime data and messaging for web and mobile.","firebase (CLI)","sf"]
+ ]},
+ {id:"containers", name:"Containers & Kubernetes", c:"c1", d:"Managed Kubernetes, fleet management, service mesh and container supply-chain controls.", items:[
+  ["Google Kubernetes Engine","kubernetes-engine","Managed Kubernetes with Standard and Autopilot modes, release channels and auto-upgrades.","gcloud container clusters","f"],
+  ["GKE Autopilot","kubernetes-engine/docs/concepts/autopilot-overview","Hands-off GKE mode where Google manages nodes and you pay per pod resource request.","gcloud container clusters create-auto","s"],
+  ["GKE Enterprise","kubernetes-engine/enterprise/docs","Fleet-wide management, policy and configuration for clusters on Google Cloud, other clouds and on-prem.","gcloud container fleet",""],
+  ["Cloud Service Mesh","service-mesh","Managed Istio-based service mesh for traffic management, mTLS and service telemetry.","gcloud container fleet mesh",""],
+  ["Config Sync","kubernetes-engine/enterprise/config-sync/docs/overview","GitOps sync of Kubernetes configuration and policy from Git or OCI repositories to clusters.","gcloud beta container fleet config-management",""],
+  ["Binary Authorization","binary-authorization","Deploy-time policy that only allows signed, trusted container images to run.","gcloud container binauthz",""],
+  ["Backup for GKE","kubernetes-engine/docs/add-on/backup-for-gke/concepts/backup-for-gke","Back up and restore GKE workloads, including persistent volumes and config.","gcloud container backup-restore",""]
+ ]},
+ {id:"storage", name:"Storage", c:"c3", d:"Object, block and file storage, plus backup and bulk data movement.", items:[
+  ["Cloud Storage","storage","Object storage with Standard, Nearline, Coldline and Archive classes, and Autoclass.","gcloud storage","f"],
+  ["Persistent Disk","persistent-disk","Durable network block storage for Compute Engine and GKE.","gcloud compute disks",""],
+  ["Hyperdisk","compute/docs/disks/hyperdisks","Block storage with independently tunable IOPS and throughput for demanding workloads.","gcloud compute disks create --type=hyperdisk-balanced",""],
+  ["Local SSD","compute/docs/disks/local-ssd","Physically attached, ephemeral SSD for scratch space and caches with very low latency.","gcloud compute instances create --local-ssd",""],
+  ["Filestore","filestore","Managed NFS file shares for applications that need a shared file system.","gcloud filestore instances",""],
+  ["Google Cloud NetApp Volumes","netapp","Managed NetApp ONTAP file storage with NFS and SMB, snapshots and replication.","gcloud netapp volumes",""],
+  ["Parallelstore","parallelstore","High-throughput parallel file system for AI training and HPC scratch data.","gcloud parallelstore instances",""],
+  ["Backup and DR Service","backup-disaster-recovery","Centralised, policy-based backup for VMs, databases and file systems.","gcloud backup-dr",""],
+  ["Storage Transfer Service","storage-transfer-service","Scheduled, managed transfers from other clouds, HTTP sources or on-prem file systems.","gcloud transfer jobs",""],
+  ["Transfer Appliance","transfer-appliance","Physical, rack-mountable device for shipping petabytes of data offline into Google Cloud.","console only",""]
+ ]},
+ {id:"databases", name:"Databases", c:"c3", d:"Managed relational, NoSQL and in-memory databases, plus tools to migrate into them.", items:[
+  ["Cloud SQL","sql","Managed MySQL, PostgreSQL and SQL Server with automated backups, HA and read replicas.","gcloud sql instances",""],
+  ["AlloyDB for PostgreSQL","alloydb","PostgreSQL-compatible database built for high transactional and analytical performance, with vector search.","gcloud alloydb clusters",""],
+  ["Spanner","spanner","Globally distributed, strongly consistent relational database with up to 99.999% availability.","gcloud spanner instances",""],
+  ["Firestore","firestore","Serverless document database with realtime sync and offline support for apps.","gcloud firestore","sf"],
+  ["Bigtable","bigtable","Wide-column NoSQL store for very large, low-latency analytical and operational data.","gcloud bigtable instances",""],
+  ["Memorystore","memorystore","Managed in-memory caching with Valkey, Redis and Memcached engines.","gcloud redis instances",""],
+  ["Database Migration Service","database-migration","Serverless migrations from MySQL, PostgreSQL, SQL Server and Oracle into Cloud SQL and AlloyDB.","gcloud database-migration","s"],
+  ["Database Center","database-center","Single view of the health, security and cost of your database fleet.","console only",""]
+ ]},
+ {id:"data", name:"Data & Analytics", c:"c6", d:"Warehousing, streaming, processing, orchestration, governance and BI.", items:[
+  ["BigQuery","bigquery","Serverless data warehouse with built-in ML, geospatial, BI Engine and open table formats.","bq","sf"],
+  ["Pub/Sub","pubsub","Global, at-least-once messaging for event ingestion and streaming pipelines.","gcloud pubsub","sf"],
+  ["Dataflow","dataflow","Managed Apache Beam for unified batch and streaming pipelines with autoscaling.","gcloud dataflow jobs","s"],
+  ["Dataproc","dataproc","Managed Spark, Hadoop, Flink and Presto clusters that spin up in about 90 seconds.","gcloud dataproc clusters",""],
+  ["Serverless for Apache Spark","dataproc-serverless/docs","Run Spark batches and interactive sessions without provisioning clusters.","gcloud dataproc batches","s"],
+  ["Managed Service for Apache Kafka","managed-service-for-apache-kafka","Fully managed, open-source-compatible Apache Kafka clusters.","gcloud managed-kafka clusters",""],
+  ["Datastream","datastream","Serverless change data capture from operational databases into BigQuery and Cloud Storage.","gcloud datastream streams","s"],
+  ["Cloud Composer","composer","Managed Apache Airflow for orchestrating data workflows.","gcloud composer environments",""],
+  ["Cloud Data Fusion","data-fusion","Visual, code-free data integration built on open-source CDAP.","gcloud beta data-fusion",""],
+  ["Dataform","dataform","SQL-based workflows to build, test and version data transformations in BigQuery.","gcloud dataform","s"],
+  ["Dataplex Universal Catalog","dataplex","Data discovery, cataloguing, quality and governance across lakes and warehouses.","gcloud dataplex",""],
+  ["BigLake","biglake","Unified storage engine for open formats like Apache Iceberg with fine-grained access control.","bq (BigLake tables)",""],
+  ["BigQuery sharing (Analytics Hub)","analytics-hub","Securely share and subscribe to datasets across organisations without copying data.","analyticshub.googleapis.com",""],
+  ["Looker","looker","Enterprise BI platform with a semantic modelling layer (LookML) and embedded analytics.","gcloud looker instances",""],
+  ["Looker Studio","looker-studio","Free, self-service dashboards and reports over many data sources.","web app","f"]
+ ]},
+ {id:"ai", name:"AI & Machine Learning", c:"c4", d:"Foundation models, agent building, ML platform and ready-made AI APIs.", items:[
+  ["Vertex AI","vertex-ai","Unified ML platform for training, tuning, deploying, evaluating and monitoring models.","gcloud ai",""],
+  ["Gemini on Vertex AI","vertex-ai/generative-ai/docs","Gemini models for text, code, image, audio and video understanding with enterprise controls.","aiplatform.googleapis.com",""],
+  ["Model Garden","model-garden","Catalogue of Google, partner and open models (Gemma, Llama, Claude and more) ready to deploy.","gcloud ai model-garden",""],
+  ["Vertex AI Agent Builder","products/agent-builder","Build, deploy and govern AI agents, including Agent Engine runtime and the Agent Development Kit.","gcloud ai reasoning-engines",""],
+  ["Vertex AI Search","enterprise-search","Google-quality search and RAG over your websites, documents and structured data.","discoveryengine.googleapis.com",""],
+  ["Gemini Enterprise","gemini-enterprise","Agent platform for employees that connects to company data and apps.","web app",""],
+  ["Gemini Code Assist","products/gemini/code-assist","AI coding assistance in IDEs, code review and the terminal.","IDE plugin",""],
+  ["Gemini Cloud Assist","products/gemini/cloud-assist","AI help for designing, operating, troubleshooting and optimising Google Cloud resources.","console",""],
+  ["Vertex AI Workbench","vertex-ai/docs/workbench/introduction","Managed JupyterLab instances integrated with BigQuery, Dataproc and Vertex AI.","gcloud workbench instances",""],
+  ["Colab Enterprise","colab","Managed Colab notebooks with enterprise security and Google Cloud integration.","gcloud colab",""],
+  ["Document AI","document-ai","Extract, classify and split data from documents like invoices, forms and IDs.","documentai.googleapis.com",""],
+  ["Vision AI","vision","Image labelling, OCR, face and landmark detection, and safe-search via API.","vision.googleapis.com","f"],
+  ["Video Intelligence API","video-intelligence","Detect objects, shots, text and explicit content in stored or streaming video.","videointelligence.googleapis.com","f"],
+  ["Speech-to-Text","speech-to-text","Transcription in 125+ languages with Chirp models, streaming and batch.","speech.googleapis.com","f"],
+  ["Text-to-Speech","text-to-speech","Natural-sounding speech synthesis with hundreds of voices, including custom voices.","texttospeech.googleapis.com","f"],
+  ["Cloud Translation","translate","Neural and LLM-based translation for text and documents across 100+ languages.","translate.googleapis.com",""],
+  ["Natural Language AI","natural-language","Entity, sentiment, syntax and content classification on text.","language.googleapis.com","f"],
+  ["Dialogflow","dialogflow","Conversational agents for chat and voice, including generative playbooks.","dialogflow.googleapis.com",""],
+  ["Customer Engagement Suite","solutions/customer-engagement-ai","Contact-centre AI: virtual agents, agent assist and conversational insights.","contactcenterinsights.googleapis.com",""],
+  ["Recommendations AI","recommendations","Personalised product recommendations for retail sites.","retail.googleapis.com",""]
+ ]},
+ {id:"networking", name:"Networking", c:"c2", d:"Private networks, load balancing, hybrid connectivity, DNS and content delivery.", items:[
+  ["Virtual Private Cloud","vpc","Global software-defined networks with subnets, routes and firewall policies.","gcloud compute networks",""],
+  ["Cloud Load Balancing","load-balancing","Global and regional L4/L7 load balancers with a single anycast IP.","gcloud compute forwarding-rules",""],
+  ["Cloud CDN","cdn","Edge caching for content served through external Application Load Balancers.","gcloud compute backend-services --enable-cdn",""],
+  ["Media CDN","media-cdn","Large-scale delivery for streaming video and large downloads on Google’s edge.","gcloud edge-cache",""],
+  ["Cloud DNS","dns","Managed authoritative DNS with public and private zones and DNSSEC.","gcloud dns managed-zones",""],
+  ["Cloud NAT","nat","Managed outbound NAT for resources without external IPs.","gcloud compute routers nats",""],
+  ["Cloud Interconnect","network-connectivity/docs/interconnect","Dedicated or partner physical links between your network and Google Cloud.","gcloud compute interconnects",""],
+  ["Cloud VPN","network-connectivity/docs/vpn","IPsec tunnels, including HA VPN with a 99.99% SLA.","gcloud compute vpn-tunnels",""],
+  ["Cloud Router","network-connectivity/docs/router","Dynamic BGP routing between VPC networks and on-prem or other clouds.","gcloud compute routers",""],
+  ["Network Connectivity Center","network-connectivity/docs/network-connectivity-center","Hub-and-spoke model to connect VPCs, VPNs and Interconnects at scale.","gcloud network-connectivity hubs",""],
+  ["Private Service Connect","vpc/docs/private-service-connect","Reach Google APIs and producer services privately through internal endpoints.","gcloud compute forwarding-rules (PSC)",""],
+  ["Cloud Next Generation Firewall","firewall","Distributed firewall with hierarchical policies, FQDN rules and intrusion prevention.","gcloud compute network-firewall-policies",""],
+  ["Network Intelligence Center","network-intelligence-center","Topology, connectivity tests, performance dashboards and firewall insights.","gcloud network-management",""],
+  ["Service Directory","service-directory","Managed registry to publish and discover services across environments.","gcloud service-directory",""],
+  ["Network Service Tiers","network-tiers","Choose Premium (Google backbone) or Standard (public internet) routing per resource.","gcloud compute project-info update --default-network-tier",""]
+ ]},
+ {id:"security", name:"Security & Identity", c:"c4", d:"Identity, access, secrets, keys, threat detection and data protection.", items:[
+  ["Identity and Access Management","iam","Fine-grained roles, service accounts, deny policies and workload identity.","gcloud iam",""],
+  ["Workload Identity Federation","iam/docs/workload-identity-federation","Let workloads outside Google Cloud authenticate without service account keys.","gcloud iam workload-identity-pools",""],
+  ["Identity-Aware Proxy","iap","Context-aware access to apps and VMs without a VPN.","gcloud iap",""],
+  ["Cloud Identity","identity","Identity as a service for users, groups, devices and SSO.","admin console",""],
+  ["Identity Platform","identity-platform","Customer identity and access management for your own apps.","identitytoolkit.googleapis.com",""],
+  ["Secret Manager","secret-manager","Store, version, rotate and audit API keys, passwords and certificates.","gcloud secrets","f"],
+  ["Cloud Key Management Service","security/products/security-key-management","Manage symmetric and asymmetric keys, including Cloud HSM and external key management.","gcloud kms",""],
+  ["Certificate Manager","certificate-manager","Provision and deploy TLS certificates for load balancers at scale.","gcloud certificate-manager",""],
+  ["Certificate Authority Service","certificate-authority-service","Managed private certificate authorities.","gcloud privateca",""],
+  ["Security Command Center","security-command-center","Posture management, threat detection and vulnerability findings across your organisation.","gcloud scc",""],
+  ["Google Security Operations","security/products/security-operations","SIEM and SOAR platform for detection, investigation and response.","web app",""],
+  ["Cloud Armor","security/products/armor","WAF and DDoS protection for applications behind Google’s load balancers.","gcloud compute security-policies",""],
+  ["Model Armor","security-command-center/docs/model-armor-overview","Screen LLM prompts and responses for prompt injection, data leaks and harmful content.","gcloud model-armor",""],
+  ["VPC Service Controls","vpc-service-controls","Security perimeters that block data exfiltration from managed services.","gcloud access-context-manager perimeters",""],
+  ["Sensitive Data Protection","sensitive-data-protection","Discover, classify and de-identify sensitive data (formerly Cloud DLP).","dlp.googleapis.com",""],
+  ["Assured Workloads","assured-workloads","Compliance-controlled environments for regulated and sovereign workloads.","gcloud assured workloads",""],
+  ["reCAPTCHA","security/products/recaptcha","Bot and fraud protection for websites and mobile apps.","gcloud recaptcha keys",""]
+ ]},
+ {id:"devops", name:"DevOps & CI/CD", c:"c5", d:"Build, store, ship and provision: the delivery pipeline and developer environments.", items:[
+  ["Cloud Build","build","Serverless CI that runs build steps in containers and produces SLSA provenance.","gcloud builds","sf"],
+  ["Cloud Deploy","deploy","Managed continuous delivery to GKE, Cloud Run and GKE Enterprise with promotions and rollbacks.","gcloud deploy","f"],
+  ["Artifact Registry","artifact-registry","Store container images and language packages (Maven, npm, Python, Go and more).","gcloud artifacts","f"],
+  ["Artifact Analysis","artifact-analysis/docs","Vulnerability scanning and metadata for images and packages in Artifact Registry.","gcloud artifacts docker images scan",""],
+  ["Infrastructure Manager","infrastructure-manager/docs","Managed Terraform: deploy and track infrastructure from Terraform configs.","gcloud infra-manager",""],
+  ["Config Connector","config-connector/docs/overview","Manage Google Cloud resources as Kubernetes custom resources.","kubectl (Config Connector CRDs)",""],
+  ["Terraform on Google Cloud","docs/terraform","Official provider and modules for provisioning Google Cloud with Terraform.","terraform",""],
+  ["Secure Source Manager","secure-source-manager/docs/overview","Regionally deployed, single-tenant managed Git repositories.","gcloud source-manager",""],
+  ["Developer Connect","developer-connect/docs","Connect GitHub and GitLab repositories to Google Cloud developer tools.","gcloud developer-connect",""],
+  ["Cloud Workstations","workstations","Managed, secure cloud development environments with your choice of IDE.","gcloud workstations",""],
+  ["Cloud Shell","shell/docs","Browser-based terminal with gcloud, kubectl and an editor preinstalled.","gcloud cloud-shell","f"],
+  ["Cloud Code","code","IDE plugins for VS Code and JetBrains to develop for Kubernetes and Cloud Run.","IDE plugin",""],
+  ["Assured Open Source Software","security/products/assured-open-source-software","Google-built and verified Java and Python packages.","Artifact Registry remote repo",""]
+ ]},
+ {id:"observability", name:"Observability & Operations", c:"c2", d:"Logs, metrics, traces and the tools SREs use to run Google Cloud day to day.", items:[
+  ["Cloud Monitoring","monitoring","Metrics, dashboards, uptime checks, SLOs and alerting.","gcloud monitoring","f"],
+  ["Cloud Logging","logging","Ingest, search and route logs with Log Analytics in BigQuery.","gcloud logging","f"],
+  ["Managed Service for Prometheus","stackdriver/docs/managed-prometheus","Prometheus-compatible collection and global querying with PromQL.","gcloud container clusters update --enable-managed-prometheus",""],
+  ["Cloud Trace","trace","Distributed tracing with OpenTelemetry support and latency analysis.","cloudtrace.googleapis.com","f"],
+  ["Cloud Profiler","profiler","Continuous CPU and heap profiling in production with low overhead.","cloudprofiler.googleapis.com","f"],
+  ["Error Reporting","error-reporting","Groups and alerts on application errors from logs.","gcloud beta error-reporting","f"],
+  ["Cloud Audit Logs","logging/docs/audit","Admin activity, data access and system event logs for every project.","gcloud logging read (audit)",""],
+  ["Ops Agent","stackdriver/docs/solutions/agents/ops-agent","Single agent that ships VM logs and metrics to Cloud Logging and Monitoring.","gcloud compute ssh + install script",""],
+  ["Personalized Service Health","service-health/docs/overview","Google Cloud incidents relevant to your projects, with alerts and APIs.","servicehealth.googleapis.com",""],
+  ["App Hub","app-hub/docs/overview","Model applications from services and workloads across projects for ownership and monitoring.","gcloud apphub",""],
+  ["Cloud Asset Inventory","asset-inventory","Search, export and watch every resource and IAM policy in your organisation.","gcloud asset",""],
+  ["VM Manager","compute/docs/vm-manager","OS patching, inventory and configuration management for VM fleets.","gcloud compute os-config",""],
+  ["Active Assist (Recommender)","solutions/active-assist","Recommendations to cut cost, tighten IAM and improve performance.","gcloud recommender",""]
+ ]},
+ {id:"integration", name:"Integration & Orchestration", c:"c6", d:"Connect services, schedule work, route events and publish APIs.", items:[
+  ["Apigee API Management","apigee","Design, secure, analyse and monetise APIs, including AI gateway policies.","gcloud apigee",""],
+  ["API Gateway","api-gateway","Managed gateway for serverless backends using OpenAPI specs.","gcloud api-gateway","s"],
+  ["Workflows","workflows","Serverless orchestration of Google Cloud services and HTTP APIs.","gcloud workflows","sf"],
+  ["Eventarc","eventarc","Route events from Google sources, SaaS and custom apps to Cloud Run, Workflows and more.","gcloud eventarc","s"],
+  ["Cloud Scheduler","scheduler","Managed cron jobs that hit HTTP targets, Pub/Sub or App Engine.","gcloud scheduler jobs","sf"],
+  ["Cloud Tasks","tasks","Managed queues for asynchronous, rate-limited task dispatch.","gcloud tasks queues","sf"],
+  ["Application Integration","application-integration","Low-code integration platform for building workflows between apps.","integrations.googleapis.com",""],
+  ["Integration Connectors","integration-connectors","Prebuilt connectors to SaaS apps and databases for Apigee and Application Integration.","gcloud connectors",""]
+ ]},
+ {id:"management", name:"Management & Governance", c:"c3", d:"Resource hierarchy, policy, billing and cost visibility.", items:[
+  ["Resource Manager","resource-manager","Organisations, folders, projects and tags for structuring resources.","gcloud resource-manager",""],
+  ["Organization Policy Service","resource-manager/docs/organization-policy/overview","Guardrails that restrict how resources can be configured across the hierarchy.","gcloud org-policies",""],
+  ["Policy Intelligence","policy-intelligence","IAM recommender, policy troubleshooter and policy analyzer.","gcloud policy-intelligence",""],
+  ["Cloud Billing","billing/docs","Billing accounts, budgets, alerts and export of cost data to BigQuery.","gcloud billing",""],
+  ["FinOps hub","billing/docs/how-to/finops-hub","Savings opportunities and committed-use discount utilisation in one view.","console",""],
+  ["Cloud Quotas","docs/quotas","View, adjust and monitor quotas and request increases.","gcloud quotas",""],
+  ["Service Usage","service-usage/docs","Enable, disable and inspect APIs and services per project.","gcloud services",""],
+  ["Carbon Footprint","carbon-footprint","Gross emissions reporting for your Google Cloud usage.","console + BigQuery export",""]
+ ]},
+ {id:"migration", name:"Migration & Hybrid", c:"c1", d:"Assess, plan and move workloads, or run Google Cloud in your own locations.", items:[
+  ["Migration Center","migration-center","Discover on-prem assets, estimate cost and plan migrations.","gcloud migration-center",""],
+  ["Migrate to Virtual Machines","migrate/virtual-machines","Lift-and-shift VMs from VMware, AWS and Azure into Compute Engine.","gcloud migration vms",""],
+  ["Migrate to Containers","migrate/containers/docs","Convert VM-based workloads into containers for GKE and Cloud Run.","mcdc (CLI)",""],
+  ["BigQuery Migration Service","bigquery/docs/migration-intro","Assess and translate SQL and move data from other warehouses into BigQuery.","bq / bigquerymigration API",""],
+  ["Google Distributed Cloud","distributed-cloud","Google Cloud infrastructure and services on-prem, at the edge or air-gapped.","gcloud edge-cloud",""]
+ ]},
+ {id:"media", name:"Media & Industry APIs", c:"c4", d:"Purpose-built APIs for video, healthcare and location.", items:[
+  ["Transcoder API","transcoder","Convert video files into streaming formats like HLS and DASH.","transcoder.googleapis.com",""],
+  ["Live Stream API","livestream","Encode live video into streaming formats for delivery.","gcloud livestream",""],
+  ["Cloud Healthcare API","healthcare-api","Managed FHIR, HL7v2 and DICOM stores for healthcare data.","gcloud healthcare",""],
+  ["Google Maps Platform","https://mapsplatform.google.com","Maps, routes, places and geocoding APIs for apps and websites.","maps API keys",""]
+ ]}
+];
+
+
+const $=s=>document.querySelector(s);
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const href=u=>u.startsWith("http")?u:"https://cloud.google.com/"+u;
+const total=DATA.reduce((a,c)=>a+c.items.length,0);
+
+const ICONS={
+ compute:'<rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/>',
+ serverless:'<path d="M13 2 4 14h7l-1 8 9-12h-7z"/>',
+ containers:'<path d="M12 2 3 7v10l9 5 9-5V7zM3 7l9 5 9-5M12 12v10"/>',
+ storage:'<rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/>',
+ databases:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+ data:'<path d="M4 20V11M10 20V4M16 20v-7M21 20H3"/>',
+ ai:'<path d="M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 15l.8 2.2L22 18l-2.2.8L19 21l-.8-2.2L16 18l2.2-.8z"/>',
+ networking:'<circle cx="5" cy="12" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="19" cy="19" r="2"/><path d="M7 11l10-5M7 13l10 5M19 7v10"/>',
+ security:'<path d="M12 2l8 3v6c0 5-3.4 9.3-8 11-4.6-1.7-8-6-8-11V5zM9 12l2 2 4-4"/>',
+ devops:'<path d="M7 8c-2.2 0-4 1.8-4 4s1.8 4 4 4c4 0 6-8 10-8 2.2 0 4 1.8 4 4s-1.8 4-4 4c-4 0-6-8-10-8z"/>',
+ observability:'<path d="M2 12h4l3-7 4 14 3-7h6"/>',
+ integration:'<path d="M4 8h14l-3-3M20 16H6l3 3"/>',
+ management:'<path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/>',
+ migration:'<rect x="2" y="7" width="7" height="10" rx="1.5"/><rect x="15" y="7" width="7" height="10" rx="1.5"/><path d="M9 12h6M12.5 9.5 15 12l-2.5 2.5"/>',
+ media:'<rect x="2" y="4" width="20" height="16" rx="3"/><path d="M10 9v6l5-3z"/>'
+};
+const icon=id=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[id]||""}</svg>`;
+const STOP=new Set(["cloud","google","for","and","on","of","the","service","api","ai"]);
+function monogram(n){
+  const w=n.replace(/[()\/]/g," ").split(/[\s-]+/).filter(x=>x&&!STOP.has(x.toLowerCase()));
+  const ws=w.length?w:n.split(/\s+/);
+  return (ws.length>1?ws[0][0]+ws[1][0]:ws[0].slice(0,2)).replace(/^./,c=>c.toUpperCase());
+}
+function cliHtml(c){
+  const cmd=/^(gcloud|bq|kubectl|terraform|firebase|mcdc)\b/.test(c), api=/googleapis\.com$/.test(c);
+  if(!cmd&&!api) return `<span class="cli plain"><code>${esc(c)}</code></span>`;
+  return `<span class="cli${api?" api":""}"><code>${esc(c)}</code><button class="cp" data-c="${esc(c)}" aria-label="Copy ${esc(c)}">Copy</button></span>`;
+}
+function render(){
+  const main=$("#main");
+  main.innerHTML=DATA.map(cat=>`
+    <section class="seg" id="${cat.id}" aria-labelledby="h-${cat.id}" style="--sc:var(--${cat.c})">
+      <div class="seg-h">
+        <div class="seg-ic">${icon(cat.id)}</div>
+        <h2 id="h-${cat.id}">${cat.name}</h2>
+        <p class="seg-d">${cat.d}</p>
+        <div class="pix" data-pix="${cat.id}" aria-hidden="true">${cat.items.map(()=>"<i></i>").join("")}<span data-n="${cat.id}"></span></div>
+      </div>
+      <ul class="svc">${cat.items.map(r=>`
+        <li class="s" data-s="${esc((r[0]+" "+r[2]+" "+r[3]+" "+cat.name).toLowerCase())}" data-f="${r[4]}">
+          <div class="s-top">
+            <span class="mono" aria-hidden="true">${esc(monogram(r[0]))}</span>
+            <div><a class="s-name" href="${href(r[1])}" target="_blank" rel="noopener" data-t="${esc(r[0])}">${esc(r[0])}</a>
+            <div class="tags">${r[4].includes("s")?'<span class="tag sv">Serverless</span>':""}${r[4].includes("f")?'<span class="tag f">Free tier</span>':""}</div></div>
+          </div>
+          <p class="s-desc" data-t="${esc(r[2])}">${esc(r[2])}</p>
+          ${cliHtml(r[3])}
+        </li>`).join("")}</ul>
+    </section>`).join("")+`<p class="empty" id="empty" hidden>No services match. <button id="reset">Clear the search and filters</button></p>`;
+  const rail=DATA.map(c=>`<li><a href="#${c.id}" data-r="${c.id}" style="--sc:var(--${c.c})"><span class="ic">${icon(c.id)}</span>${c.name}<span class="n" data-rn="${c.id}"></span></a></li>`).join("");
+  $("#rail").innerHTML=rail; $("#rail2").innerHTML=rail;
+}
+
+let filter="all";
+function hl(text,q){
+  if(!q) return esc(text);
+  const i=text.toLowerCase().indexOf(q); if(i<0) return esc(text);
+  return esc(text.slice(0,i))+"<mark>"+esc(text.slice(i,i+q.length))+"</mark>"+esc(text.slice(i+q.length));
+}
+function apply(){
+  const q=$("#q").value.trim().toLowerCase();
+  let shown=0, segs=0;
+  DATA.forEach(cat=>{
+    const sec=document.getElementById(cat.id); let n=0;
+    sec.querySelectorAll("li.s").forEach(li=>{
+      const ok=(!q||li.dataset.s.includes(q))&&(filter==="all"||li.dataset.f.includes(filter));
+      li.hidden=!ok; if(ok){n++;
+        li.querySelectorAll("[data-t]").forEach(el=>el.innerHTML=hl(el.dataset.t,q));}
+    });
+    sec.hidden=n===0; if(n) segs++; shown+=n;
+    sec.querySelector(`[data-n="${cat.id}"]`).textContent=n+" of "+cat.items.length;
+    const lis=sec.querySelectorAll("li.s"); sec.querySelectorAll(".pix i").forEach((p,i)=>p.classList.toggle("off",lis[i].hidden));
+    document.querySelectorAll(`[data-rn="${cat.id}"]`).forEach(el=>el.textContent=n);
+    document.querySelectorAll(`[data-r="${cat.id}"]`).forEach(el=>el.classList.toggle("dim",n===0));
+  });
+  $("#empty").hidden=shown!==0;
+  $("#status").textContent = (q||filter!=="all")
+    ? `Listed ${shown} of ${total} services in ${segs} segment${segs===1?"":"s"}`
+    : `Listed ${total} services in ${DATA.length} segments`;
+}
+
+render(); apply(); $("#kCount").textContent=total;
+
+$("#q").addEventListener("input",apply);
+document.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+  filter=b.dataset.f;
+  document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===b?"true":"false"));
+  apply();
+}));
+document.addEventListener("click",e=>{
+  if(e.target.id==="reset"){ $("#q").value=""; filter="all";
+    document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x.dataset.f==="all"?"true":"false")); apply(); $("#q").focus(); }
+  const cp=e.target.closest(".cp"); if(cp){
+    const done=()=>{cp.textContent="Copied";setTimeout(()=>cp.textContent="Copy",1400)};
+    try{ navigator.clipboard.writeText(cp.dataset.c).then(done,()=>{cp.textContent="Select to copy"}); }catch(_){ cp.textContent="Select to copy"; }
+  }
+});
+document.addEventListener("keydown",e=>{
+  if(e.key==="/"&&document.activeElement!==$("#q")){e.preventDefault();$("#q").focus();}
+  if(e.key==="Escape") closeSheet();
+});
+
+/* active segment in rail */
+const io=new IntersectionObserver(es=>{
+  es.forEach(en=>{ if(en.isIntersecting){
+    document.querySelectorAll("#rail a").forEach(a=>a.classList.toggle("on",a.dataset.r===en.target.id));
+  }});
+},{rootMargin:"-30% 0px -60% 0px"});
+document.querySelectorAll("section.seg").forEach(s=>io.observe(s));
+
+/* mobile sheet */
+const sheet=$("#sheet");
+function closeSheet(){sheet.classList.remove("open")}
+$("#catBtn").addEventListener("click",()=>{sheet.classList.add("open");$("#sheetX").focus();});
+$("#sheetX").addEventListener("click",closeSheet);
+sheet.addEventListener("click",e=>{ if(e.target===sheet||e.target.closest("a")) closeSheet(); });
+
+/* back to top */
+const tt=$("#totop");
+addEventListener("scroll",()=>tt.classList.toggle("show",scrollY>800),{passive:true});
+tt.addEventListener("click",()=>scrollTo({top:0}));
+
+
+/* constellation art */
+(function(){
+  const cv=$("#cv"), sky=$("#sky"), tip=$("#tip"), ctx=cv.getContext("2d");
+  const reduce=matchMedia("(prefers-reduced-motion: reduce)");
+  // cluster centres arranged as a cloud silhouette
+  const C=[[.14,.66],[.29,.70],[.44,.73],[.59,.72],[.74,.69],[.88,.64],
+           [.20,.46],[.34,.44],[.49,.47],[.64,.45],[.79,.44],
+           [.33,.24],[.50,.22],[.66,.25],[.50,.06]];
+  let W=0,H=0,dots=[],cols={},hover=null,t0=performance.now();
+  function readCols(){const cs=getComputedStyle(document.documentElement);
+    ["c1","c2","c3","c4","c5","c6","ink","muted","rule"].forEach(k=>cols[k]=cs.getPropertyValue("--"+k).trim());}
+  function build(){
+    dots=[]; let rnd=7;
+    const R=()=>((rnd=(rnd*9301+49297)%233280)/233280);
+    DATA.forEach((cat,ci)=>{
+      const [cx,cy]=C[ci%C.length]; const n=cat.items.length;
+      cat.items.forEach((it,i)=>{
+        const ring=Math.sqrt(i+1)/Math.sqrt(n);
+        dots.push({cat,ci,name:it[0],cx,cy,r:.035+.055*ring,a:i*2.39996+R(),sp:(.00012+R()*.00018)*(R()<.5?-1:1),s:2.4+R()*2.2});
+      });
+    });
+  }
+  function size(){const r=sky.getBoundingClientRect(),d=devicePixelRatio||1;W=r.width;H=r.height;cv.width=W*d;cv.height=H*d;ctx.setTransform(d,0,0,d,0,0);}
+  function pos(d,t){const a=d.a+t*d.sp;const k=Math.min(W,H*1.15);return [d.cx*W+Math.cos(a)*d.r*k*1.25,(d.cy*.86+.1)*H+Math.sin(a)*d.r*k*.9];}
+  function draw(t){
+    ctx.clearRect(0,0,W,H);
+    // links between cluster centres
+    ctx.lineWidth=1;
+    const cc=C.slice(0,DATA.length).map(([x,y])=>[x*W,(y*.86+.1)*H]);
+    ctx.strokeStyle=cols.muted; ctx.globalAlpha=.22; ctx.setLineDash([2,5]);
+    for(let i=0;i<cc.length;i++)for(let j=i+1;j<cc.length;j++){
+      const dx=cc[i][0]-cc[j][0],dy=cc[i][1]-cc[j][1]; if(Math.hypot(dx/W,dy/H)<.2){ctx.beginPath();ctx.moveTo(...cc[i]);ctx.lineTo(...cc[j]);ctx.stroke();}
+    }
+    ctx.setLineDash([]);
+    const P=dots.map(d=>pos(d,t));
+    // spokes
+    dots.forEach((d,i)=>{const c=cols[d.cat.c];ctx.strokeStyle=c;ctx.globalAlpha=hover&&hover.cat===d.cat?.55:.16;
+      ctx.beginPath();ctx.moveTo(...cc[d.ci]);ctx.lineTo(...P[i]);ctx.stroke();});
+    // dots
+    dots.forEach((d,i)=>{const c=cols[d.cat.c];const on=hover&&hover.cat===d.cat;const me=hover===d;
+      ctx.globalAlpha=hover&&!on?.35:1;ctx.fillStyle=c;ctx.beginPath();ctx.arc(P[i][0],P[i][1],me?d.s+3:d.s,0,7);ctx.fill();
+      if(me){ctx.globalAlpha=.25;ctx.beginPath();ctx.arc(P[i][0],P[i][1],d.s+9,0,7);ctx.fill();}
+      d.px=P[i][0];d.py=P[i][1];});
+    // cluster cores
+    cc.forEach((p,i)=>{ctx.globalAlpha=1;ctx.fillStyle=cols[DATA[i].c];ctx.beginPath();ctx.arc(p[0],p[1],3,0,7);ctx.fill();
+      ctx.globalAlpha=.18;ctx.beginPath();ctx.arc(p[0],p[1],10,0,7);ctx.fill();});
+    ctx.globalAlpha=1;
+    if(hover){tip.style.left=hover.px+"px";tip.style.top=hover.py+"px";}
+  }
+  let raf;
+  function loop(now){draw(now-t0);raf=requestAnimationFrame(loop);}
+  function start(){cancelAnimationFrame(raf);if(reduce.matches)draw(0);else raf=requestAnimationFrame(loop);}
+  function pick(e){const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let best=null,bd=14;
+    dots.forEach(d=>{const k=Math.hypot(d.px-x,d.py-y);if(k<bd){bd=k;best=d;}});return best;}
+  cv.addEventListener("pointermove",e=>{hover=pick(e);
+    if(hover){tip.innerHTML=esc(hover.name)+"<small>"+esc(hover.cat.name)+"</small>";tip.classList.add("on");cv.style.cursor="pointer";}
+    else{tip.classList.remove("on");cv.style.cursor="crosshair";}
+    if(reduce.matches)draw(0);});
+  cv.addEventListener("pointerleave",()=>{hover=null;tip.classList.remove("on");if(reduce.matches)draw(0);});
+  cv.addEventListener("click",e=>{const d=pick(e);if(d){const q=$("#q");q.value=d.name.toLowerCase();apply();
+    document.getElementById(d.cat.id).scrollIntoView({behavior:reduce.matches?"auto":"smooth"});}});
+  readCols();build();size();start();
+  new ResizeObserver(()=>{size();if(reduce.matches)draw(0);}).observe(sky);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{readCols();if(reduce.matches)draw(0);});
+  reduce.addEventListener("change",start);
+  document.addEventListener("visibilitychange",()=>{if(document.hidden)cancelAnimationFrame(raf);else start();});
+})();
+
+/* honour #segment on load */
+if(location.hash){ const t=document.getElementById(location.hash.slice(1)); if(t) setTimeout(()=>t.scrollIntoView(),50); }
+</script>
+</body>
+</html>
